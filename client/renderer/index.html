@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';">
+  <title>RemoteDesk</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════ PAGRINDINIS EKRANAS -->
+<div id="screen-main" class="screen active">
+
+  <!-- Antraštė -->
+  <header class="header">
+    <div class="logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="6" fill="#4f46e5"/>
+        <path d="M7 9h14M7 14h10M7 19h7" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="21" cy="19" r="3.5" fill="#10b981"/>
+      </svg>
+      <span>RemoteDesk</span>
+    </div>
+    <div class="status-bar">
+      <span id="relay-dot" class="dot dot-red"></span>
+      <span id="relay-label">Jungiamasi...</span>
+    </div>
+  </header>
+
+  <!-- Dvi kortelės: HOST ir VIEWER -->
+  <main class="cards">
+
+    <!-- HOST kortelė -->
+    <div class="card" id="card-host">
+      <div class="card-icon">🖥️</div>
+      <h2>Dalintis ekranu</h2>
+      <p class="card-desc">Suteikite prieigą prie šio kompiuterio kitam vartotojui</p>
+
+      <div class="form-group" id="host-setup">
+        <label>Saugos slaptažodis</label>
+        <div class="input-row">
+          <input id="host-password" type="password" placeholder="Įveskite slaptažodį" maxlength="32">
+          <button id="btn-eye-host" class="btn-icon" title="Rodyti/slėpti">👁</button>
+        </div>
+        <button id="btn-start-host" class="btn btn-primary">Pradėti dalinimąsi</button>
+      </div>
+
+      <!-- Aktyvios sesijos info -->
+      <div id="host-active" class="hidden">
+        <div class="id-box">
+          <span class="id-label">Jūsų ID</span>
+          <span id="host-id" class="id-value">---</span>
+          <button id="btn-copy-id" class="btn-icon" title="Kopijuoti ID">📋</button>
+        </div>
+        <div class="session-info" id="host-session-info">
+          <span class="badge badge-waiting" id="host-status-badge">Laukiama prisijungimo...</span>
+        </div>
+        <div class="quality-controls">
+          <label>Kokybė: <span id="quality-val">65%</span></label>
+          <input id="quality-slider" type="range" min="20" max="95" value="65">
+        </div>
+        <button id="btn-stop-host" class="btn btn-danger">Sustabdyti</button>
+        <button id="btn-send-file-host" class="btn btn-secondary hidden">📁 Siųsti failą</button>
+      </div>
+    </div>
+
+    <!-- VIEWER kortelė -->
+    <div class="card" id="card-viewer">
+      <div class="card-icon">🔗</div>
+      <h2>Prisijungti</h2>
+      <p class="card-desc">Prisijunkite prie kito kompiuterio naudodami jo ID</p>
+
+      <div id="viewer-setup">
+        <div class="form-group">
+          <label>Kompiuterio ID</label>
+          <input id="viewer-target-id" type="text" placeholder="XXX-XXX-XXX" maxlength="11"
+                 autocomplete="off" spellcheck="false">
+        </div>
+        <div class="form-group">
+          <label>Slaptažodis</label>
+          <div class="input-row">
+            <input id="viewer-password" type="password" placeholder="Įveskite slaptažodį" maxlength="32">
+            <button id="btn-eye-viewer" class="btn-icon" title="Rodyti/slėpti">👁</button>
+          </div>
+        </div>
+        <button id="btn-connect" class="btn btn-primary">Prisijungti</button>
+      </div>
+
+      <div id="viewer-connecting" class="hidden center">
+        <div class="spinner"></div>
+        <p>Jungiamasi...</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Versija -->
+  <footer class="footer">
+    <span>RemoteDesk v1.0.0 MVP</span>
+    <span id="server-url-label"></span>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ PERŽIŪROS EKRANAS -->
+<div id="screen-view" class="screen hidden">
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <span class="toolbar-brand">RemoteDesk</span>
+    <div class="toolbar-info">
+      <span class="badge badge-green" id="view-conn-badge">Prisijungta</span>
+      <span id="view-host-id-label"></span>
+    </div>
+    <div class="toolbar-actions">
+      <span id="fps-counter" class="fps-badge">-- fps</span>
+      <button id="btn-send-file-viewer" class="btn btn-sm btn-secondary">📁 Failas</button>
+      <button id="btn-fullscreen" class="btn btn-sm btn-ghost">⛶ Pilnas</button>
+      <button id="btn-disconnect" class="btn btn-sm btn-danger">✕ Atsijungti</button>
+    </div>
+  </div>
+
+  <!-- Ekrano drobė -->
+  <div id="canvas-wrapper">
+    <canvas id="remote-canvas"></canvas>
+    <div id="canvas-overlay" class="hidden">
+      <div class="overlay-msg" id="overlay-text">Jungiamasi...</div>
+    </div>
+  </div>
+
+  <!-- Failų siuntimas -->
+  <div id="file-progress-bar" class="hidden">
+    <div id="file-progress-inner"></div>
+    <span id="file-progress-label">Siunčiamas failas...</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ TOAST PRANEŠIMAI -->
+<div id="toast-container"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
