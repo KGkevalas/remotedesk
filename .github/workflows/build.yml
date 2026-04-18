@@ -1,0 +1,85 @@
+name: Build RemoteDesk Windows Installer
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:   # Galima paleisti rankiniu būdu
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout kodas
+        uses: actions/checkout@v4
+
+      - name: Įdiegti Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: client/package.json
+
+      - name: Įdiegti priklausomybes
+        working-directory: client
+        run: npm install
+
+      - name: Sukompiliuoti Windows instaliatoriaus .exe
+        working-directory: client
+        run: npx electron-builder --win --x64
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Įkelti NSIS instaliatoriaus .exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: RemoteDesk-Windows-Installer
+          path: client/dist/*.exe
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Įkelti portable .exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: RemoteDesk-Windows-Portable
+          path: client/dist/*Portable*.exe
+          if-no-files-found: warn
+          retention-days: 30
+
+  release:
+    needs: build-windows
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Atsisiųsti artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: RemoteDesk-Windows-Installer
+          path: release-files/
+
+      - name: Sukurti GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: RemoteDesk v1.0.0
+          body: |
+            ## RemoteDesk v1.0.0 – Windows Instaliatoriaus
+
+            ### Atsisiuntimas
+            - **RemoteDesk Setup 1.0.0.exe** – instaliuojama versija (rekomenduojama)
+            - **RemoteDesk Portable** – portable versija (nereikia instaliacijos)
+
+            ### Naudojimas
+            1. Atsisiųskite ir paleiskite `RemoteDesk Setup 1.0.0.exe`
+            2. Įdiekite į norimą aplanką
+            3. Paleiskite RemoteDesk iš darbalaukio
+            4. Pasirinkite **Host** arba **Viewer** režimą
+
+            ### Serveris
+            Programa automatiškai jungiasi prie relay serverio: `ws://187.124.128.36:7070`
+          files: release-files/*.exe
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
