@@ -1,0 +1,433 @@
+/* ══════════════════════════════════════════════════════════ GLOBALŪS STILIAI */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg       : #0f0f1a;
+  --bg2      : #1a1a2e;
+  --bg3      : #16213e;
+  --card     : #1e1e35;
+  --border   : #2d2d50;
+  --primary  : #4f46e5;
+  --primary-h: #4338ca;
+  --danger   : #dc2626;
+  --danger-h : #b91c1c;
+  --success  : #10b981;
+  --warn     : #f59e0b;
+  --text     : #e2e8f0;
+  --text2    : #94a3b8;
+  --text3    : #64748b;
+  --radius   : 12px;
+  --radius-sm: 8px;
+  --shadow   : 0 4px 24px rgba(0,0,0,0.4);
+  --font     : -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background : var(--bg);
+  color      : var(--text);
+  height     : 100vh;
+  overflow   : hidden;
+  user-select: none;
+}
+
+/* ══════════════════════════════════════════════════════════ EKRANŲ VALDYMAS */
+
+.screen       { display: none; flex-direction: column; height: 100vh; }
+.screen.active{ display: flex; }
+.hidden       { display: none !important; }
+
+/* ══════════════════════════════════════════════════════════ PAGRINDINIS EKRANAS */
+
+/* Antraštė */
+.header {
+  display       : flex;
+  align-items   : center;
+  justify-content: space-between;
+  padding       : 14px 24px;
+  background    : var(--bg2);
+  border-bottom : 1px solid var(--border);
+  flex-shrink   : 0;
+}
+
+.logo {
+  display    : flex;
+  align-items: center;
+  gap        : 10px;
+  font-size  : 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.status-bar {
+  display    : flex;
+  align-items: center;
+  gap        : 7px;
+  font-size  : 13px;
+  color      : var(--text2);
+}
+
+.dot {
+  width        : 8px;
+  height       : 8px;
+  border-radius: 50%;
+}
+.dot-red  { background: var(--danger);  box-shadow: 0 0 6px var(--danger); }
+.dot-green{ background: var(--success); box-shadow: 0 0 6px var(--success); }
+.dot-yellow{ background: var(--warn);  box-shadow: 0 0 6px var(--warn); }
+
+/* Kortelės */
+.cards {
+  display       : flex;
+  flex          : 1;
+  gap           : 20px;
+  padding       : 28px;
+  overflow      : auto;
+  align-items   : flex-start;
+  justify-content: center;
+}
+
+.card {
+  background   : var(--card);
+  border       : 1px solid var(--border);
+  border-radius: var(--radius);
+  padding      : 28px 24px;
+  width        : 100%;
+  max-width    : 380px;
+  box-shadow   : var(--shadow);
+  transition   : border-color .2s;
+}
+
+.card:hover { border-color: var(--primary); }
+
+.card-icon { font-size: 36px; margin-bottom: 12px; }
+
+.card h2 {
+  font-size  : 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.card-desc {
+  font-size    : 14px;
+  color        : var(--text2);
+  margin-bottom: 22px;
+  line-height  : 1.5;
+}
+
+/* Formos elementai */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display      : block;
+  font-size    : 13px;
+  color        : var(--text2);
+  margin-bottom: 6px;
+  font-weight  : 500;
+}
+
+input[type="text"],
+input[type="password"] {
+  width        : 100%;
+  padding      : 10px 14px;
+  background   : var(--bg3);
+  border       : 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color        : var(--text);
+  font-size    : 14px;
+  font-family  : var(--font);
+  outline      : none;
+  transition   : border-color .15s;
+}
+
+input:focus { border-color: var(--primary); }
+
+.input-row {
+  display  : flex;
+  gap      : 8px;
+  align-items: center;
+}
+
+.input-row input { flex: 1; }
+
+/* Mygtukai */
+.btn {
+  display      : inline-flex;
+  align-items  : center;
+  justify-content: center;
+  gap          : 6px;
+  padding      : 10px 18px;
+  border       : none;
+  border-radius: var(--radius-sm);
+  font-size    : 14px;
+  font-weight  : 600;
+  font-family  : var(--font);
+  cursor       : pointer;
+  transition   : background .15s, transform .1s;
+  width        : 100%;
+  margin-top   : 8px;
+}
+
+.btn:active { transform: scale(.98); }
+
+.btn-primary  { background: var(--primary);   color: #fff; }
+.btn-primary:hover { background: var(--primary-h); }
+
+.btn-danger   { background: var(--danger);    color: #fff; }
+.btn-danger:hover { background: var(--danger-h); }
+
+.btn-secondary{ background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+
+.btn-ghost    { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover { color: var(--text); background: var(--bg3); }
+
+.btn-sm { padding: 7px 14px; font-size: 13px; width: auto; margin-top: 0; }
+
+.btn-icon {
+  background   : var(--bg3);
+  border       : 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding      : 8px 10px;
+  cursor       : pointer;
+  font-size    : 16px;
+  transition   : background .15s;
+  flex-shrink  : 0;
+}
+.btn-icon:hover { background: var(--border); }
+
+/* ID dėžutė */
+.id-box {
+  display      : flex;
+  align-items  : center;
+  gap          : 10px;
+  background   : var(--bg3);
+  border       : 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding      : 12px 14px;
+  margin-bottom: 14px;
+}
+
+.id-label {
+  font-size : 12px;
+  color     : var(--text3);
+  flex-shrink: 0;
+}
+
+.id-value {
+  font-size    : 22px;
+  font-weight  : 800;
+  letter-spacing: 3px;
+  color        : var(--success);
+  flex         : 1;
+  font-family  : 'Courier New', monospace;
+}
+
+/* Badge */
+.badge {
+  display      : inline-block;
+  padding      : 4px 10px;
+  border-radius: 20px;
+  font-size    : 12px;
+  font-weight  : 600;
+}
+.badge-waiting{ background: rgba(245,158,11,.15); color: var(--warn); }
+.badge-green  { background: rgba(16,185,129,.15); color: var(--success); }
+.badge-red    { background: rgba(220,38,38,.15);  color: var(--danger); }
+
+/* Kokybės slankiklis */
+.quality-controls {
+  margin-bottom: 14px;
+}
+.quality-controls label {
+  font-size    : 13px;
+  color        : var(--text2);
+  display      : block;
+  margin-bottom: 6px;
+}
+input[type="range"] {
+  width     : 100%;
+  accent-color: var(--primary);
+  cursor    : pointer;
+}
+
+/* Suktukas */
+.spinner {
+  width : 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius   : 50%;
+  animation: spin .7s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.center { text-align: center; padding: 20px 0; }
+
+.session-info { margin-bottom: 14px; }
+
+/* Footer */
+.footer {
+  display       : flex;
+  justify-content: space-between;
+  align-items   : center;
+  padding       : 10px 24px;
+  font-size     : 12px;
+  color         : var(--text3);
+  border-top    : 1px solid var(--border);
+  flex-shrink   : 0;
+}
+
+/* ══════════════════════════════════════════════════════════ PERŽIŪROS EKRANAS */
+
+#screen-view {
+  flex-direction: column;
+  background    : #000;
+}
+
+/* Toolbar */
+.toolbar {
+  display       : flex;
+  align-items   : center;
+  gap           : 12px;
+  padding       : 8px 16px;
+  background    : var(--bg2);
+  border-bottom : 1px solid var(--border);
+  flex-shrink   : 0;
+  z-index       : 10;
+}
+
+.toolbar-brand {
+  font-weight: 700;
+  font-size  : 15px;
+  color      : var(--text);
+  margin-right: 8px;
+}
+
+.toolbar-info {
+  display   : flex;
+  align-items: center;
+  gap       : 8px;
+  flex      : 1;
+  font-size : 13px;
+  color     : var(--text2);
+}
+
+.toolbar-actions {
+  display   : flex;
+  align-items: center;
+  gap       : 8px;
+}
+
+.fps-badge {
+  font-size  : 12px;
+  color      : var(--text3);
+  font-family: monospace;
+  padding    : 3px 8px;
+  background : var(--bg3);
+  border-radius: 4px;
+}
+
+/* Canvas wrapper */
+#canvas-wrapper {
+  flex    : 1;
+  position: relative;
+  overflow: hidden;
+  display : flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  cursor  : none; /* custom cursor valdymui */
+}
+
+#remote-canvas {
+  max-width : 100%;
+  max-height: 100%;
+  display   : block;
+  cursor    : default;
+}
+
+/* Overlay */
+#canvas-overlay {
+  position       : absolute;
+  inset          : 0;
+  background     : rgba(0,0,0,.75);
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
+  z-index        : 5;
+}
+
+.overlay-msg {
+  font-size  : 20px;
+  color      : var(--text);
+  text-align : center;
+  padding    : 20px;
+}
+
+/* Failų progreso juosta */
+#file-progress-bar {
+  position       : fixed;
+  bottom         : 16px;
+  left           : 50%;
+  transform      : translateX(-50%);
+  width          : 340px;
+  background     : var(--card);
+  border         : 1px solid var(--border);
+  border-radius  : var(--radius-sm);
+  padding        : 12px 16px;
+  z-index        : 100;
+  box-shadow     : var(--shadow);
+}
+
+#file-progress-inner {
+  height       : 6px;
+  background   : var(--primary);
+  border-radius: 3px;
+  width        : 0%;
+  transition   : width .2s;
+  margin-bottom: 6px;
+}
+
+#file-progress-label {
+  font-size: 13px;
+  color    : var(--text2);
+}
+
+/* ══════════════════════════════════════════════════════════ TOAST */
+
+#toast-container {
+  position  : fixed;
+  bottom    : 24px;
+  right     : 24px;
+  z-index   : 999;
+  display   : flex;
+  flex-direction: column;
+  gap       : 10px;
+  align-items: flex-end;
+}
+
+.toast {
+  background   : var(--card);
+  border       : 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding      : 12px 18px;
+  font-size    : 14px;
+  color        : var(--text);
+  box-shadow   : var(--shadow);
+  animation    : slideIn .25s ease;
+  max-width    : 320px;
+}
+
+.toast.toast-error   { border-left: 3px solid var(--danger); }
+.toast.toast-success { border-left: 3px solid var(--success); }
+.toast.toast-info    { border-left: 3px solid var(--primary); }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
